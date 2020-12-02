@@ -1,0 +1,19 @@
+set( CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION clang CACHE STRING "" FORCE )
+set( ANDROID_TOOLCHAIN_NAME              clang CACHE STRING "" FORCE )
+set( ANDROID_TOOLCHAIN                   clang CACHE STRING "" FORCE )
+
+set( CMAKE_ANDROID_STL_TYPE c++_static   CACHE STRING "" FORCE )
+set( ANDROID_STL            c++_static   CACHE STRING "" FORCE )
+set( ANDROID_CPP_FEATURES   "exceptions" CACHE STRING "" FORCE )
+set( ANDROID_UNIFIED_HEADERS ON          CACHE BOOL   "" FORCE )
+
+set( ENABLE_NEON ${ANDROID_ARM_NEON} CACHE BOOL "" FORCE )
+
+set( BUILD_ANDROID_EXAMPLES OFF CACHE BOOL "" FORCE )
+set( BUILD_FAT_JAVA_LIB     OFF CACHE BOOL "" FORCE )
+
+if ( ANDROID_ABI STREQUAL armeabi ) # single-threaded phones
+    set( WITH_PTHREADS_PF OFF CACHE BOOL "" FORCE )
+endif()
+
+include( "${CMAKE_CURRENT_LIST_DIR}/../common_options.cmake" )

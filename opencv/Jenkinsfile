@@ -1,0 +1,36 @@
+@Library( 'JenkinsPipelineScripts@v7.21.1' ) _
+
+import com.microblink.jenkins.conan.*
+import com.microblink.jenkins.environment.*
+
+// use CXX11 ABI for building default GCC packages
+Environment.linuxGccAbi = GCCABI.CXX11
+
+ConanBuildInfo headerOnlyModuleInfo = new ConanBuildInfo()
+headerOnlyModuleInfo.disableAll()
+headerOnlyModuleInfo.buildLinuxClang = true
+
+ConanBuildPackageConfig headerOnlyPkgConfig = new ConanBuildPackageConfig()
+headerOnlyPkgConfig.skipPackageBuildTest = true
+headerOnlyPkgConfig.platformSpecificConfigurations = [ ['', headerOnlyModuleInfo, ['Release'] ] ]
+headerOnlyPkgConfig.skipDefaultConfig = true
+
+ConanBuildPackageConfig cvParallelPkgConfig = new ConanBuildPackageConfig()
+cvParallelPkgConfig.skipPackageBuildTest = true
+
+def configuration = [
+    'conanfile.py': new ConanBuildPackageConfig(),
+    'conanfile-zlib.py': headerOnlyPkgConfig,
+    'conanfile-cv-parallel-for.py': cvParallelPkgConfig,
+    'conanfile-core.py': headerOnlyPkgConfig,
+    'conanfile-processing.py': headerOnlyPkgConfig,
+    'conanfile-image-io.py': headerOnlyPkgConfig,
+    'conanfile-video-io.py': headerOnlyPkgConfig,
+    'conanfile-gui.py': headerOnlyPkgConfig,
+    'conanfile-analysis.py': headerOnlyPkgConfig
+]
+
+BuildParameters buildParams = new BuildParameters();
+buildParams.packageConfiguration = configuration
+
+commonConanBuild.buildCoreProjectWithNoTests( buildParams )
